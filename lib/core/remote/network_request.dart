@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tv_channels_app/core/local/local_storage.dart';
 import 'package:tv_channels_app/utils/constants/app_constants.dart';
+import 'package:tv_channels_app/core/model/package_model.dart';
 
 class SignInFailure implements Exception {
   final String message;
@@ -88,15 +89,42 @@ class NetworkRequest {
   //   }
   // }
 
-  Future<String> getPackages() async {
+  // Future<String> getPackages() async {
+  //   try {
+  //     String token = await LocalStorage().getStringFromSp(AppConstants.token);
+  //     String oid =
+  //         await LocalStorage().getStringFromSp(AppConstants.operator_uid);
+  //     String uid = await LocalStorage().getStringFromSp(AppConstants.userId);
+
+  //     final Uri url = Uri.parse(
+  //         "https://office-new-dev.uniqcast.com:12611/api/client/v1/$oid/users/$uid/packages");
+  //     final response = await http.get(
+  //       url,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       return response.body; // This ensures a string is returned
+  //     } else {
+  //       throw Exception(
+  //           'Failed to load packages with status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Network error when fetching packages: $e');
+  //   }
+  // }
+
+  Future<List<PackageModel>> getPackages() async {
     try {
       String token = await LocalStorage().getStringFromSp(AppConstants.token);
       String oid =
           await LocalStorage().getStringFromSp(AppConstants.operator_uid);
       String uid = await LocalStorage().getStringFromSp(AppConstants.userId);
-
       final Uri url = Uri.parse(
-          "https://office-new-dev.uniqcast.com:12611/api/client/v1/$oid/users/$uid/packages");
+          "https://office-new-dev.uniqcast.com:12611/api/client/v1/$oid/users/$uid/packages?device_class=Mobile");
       final response = await http.get(
         url,
         headers: {
@@ -106,31 +134,36 @@ class NetworkRequest {
       );
 
       if (response.statusCode == 200) {
-        return response.body; // This ensures a string is returned
+        log("Response body: ${response.body}");
+        List<dynamic> itemsJson = jsonDecode(response.body)['data'];
+        return itemsJson.map((json) => PackageModel.fromJson(json)).toList();
       } else {
-        throw Exception(
-            'Failed to load packages with status code: ${response.statusCode}');
+        log("Failed with status: ${response.statusCode} and body: ${response.body}");
+        throw Exception('Failed to load items');
       }
     } catch (e) {
-      throw Exception('Network error when fetching packages: $e');
+      log("Exception caught: $e");
+      throw Exception("Failed to fetch packages: $e");
     }
   }
 
   //----------------------------------------------------------------
   //----------------------------------------------------------------
 
-  Future<dynamic> getChannels() async {
+  Future<dynamic> getChannels(String packageId) async {
     try {
+      // String token =
+      //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMzNTQ4MzUsImlhdCI6MTcxMzM1MzAzNSwiaXNzIjoidW5pcUNhc3QiLCJzdWIiOiJhY2Nlc3MiLCJkaWQiOjE4MDg5LCJkdWlkIjoiZmx1dHRlcl90ZXN0X2RldmljZV8ke3VtYWlyfV8ke2FobWVkfSIsIm9pZCI6MTI4LCJvdWlkIjoiamVya29fbWFqY2VuIiwicmlkIjoxMjgsInJvbGUiOlsic3Vic2NyaWJlciJdLCJydWlkIjoiZGVmYXVsdCIsInVpZCI6NjMxMiwidmVyc2lvbiI6Mn0.npH8fzPKPRqH7sLtO9YQQMnG39f8l7O0myYLXJs75nI";
+
       String token = await LocalStorage().getStringFromSp(AppConstants.token);
       String oid =
           await LocalStorage().getStringFromSp(AppConstants.operator_uid);
-      String uid = await LocalStorage().getStringFromSp(AppConstants.userId);
       if (kDebugMode) {
         log("Token: $token");
       }
       final response = await http.get(
         Uri.parse(
-            "https://office-new-dev.uniqcast.com:12611/api/client/v2/$oid/channels?packages=$uid"),
+            "https://office-new-dev.uniqcast.com:12611/api/client/v2/$oid/channels?packages=$packageId"),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

@@ -1,3 +1,3 @@
 abstract class ChannelBase {
-  Future<dynamic> channels();
+  Future<dynamic> channels(int packageId);
 }

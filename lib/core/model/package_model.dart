@@ -8,7 +8,7 @@ class PackageModel {
     return PackageModel(
       id: json['id'],
       purchased:
-          json['purchased'] != null ? DateTime.parse(json['purchased']) : null,
+          json['purchased'] == null ? null : DateTime.parse(json['purchased']),
     );
   }
 

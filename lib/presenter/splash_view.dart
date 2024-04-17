@@ -24,7 +24,9 @@ class _SplashViewState extends ConsumerState<SplashView> {
     // Await a delay first, then proceed to check the token
     await Future.delayed(const Duration(seconds: 1));
 
-    String token = await LocalStorage().getStringFromSp(AppConstants.token);
+    // String token = await LocalStorage().getStringFromSp(AppConstants.token);
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMzNTI1NDIsImlhdCI6MTcxMzM1MDc0MiwiaXNzIjoidW5pcUNhc3QiLCJzdWIiOiJhY2Nlc3MiLCJkaWQiOjE4MDg5LCJkdWlkIjoiZmx1dHRlcl90ZXN0X2RldmljZV8ke3VtYWlyfV8ke2FobWVkfSIsIm9pZCI6MTI4LCJvdWlkIjoiamVya29fbWFqY2VuIiwicmlkIjoxMjgsInJvbGUiOlsic3Vic2NyaWJlciJdLCJydWlkIjoiZGVmYXVsdCIsInVpZCI6NjMxMiwidmVyc2lvbiI6Mn0.pjXfFOf0spZL8MsB-CT4jP31JeMWkGcfRugNbVMB3mc";
     String oid =
         await LocalStorage().getStringFromSp(AppConstants.operator_uid);
     String uid = await LocalStorage().getStringFromSp(AppConstants.userId);
@@ -42,7 +44,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
           context, MaterialPageRoute(builder: (context) => const NameView()));
     } else {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const StreamView()));
+          context, MaterialPageRoute(builder: (context) => const NameView()));
     }
   }
 

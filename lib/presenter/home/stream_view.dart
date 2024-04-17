@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tv_channels_app/core/model/channel_model.dart';
@@ -20,29 +22,29 @@ class _MainViewState extends ConsumerState<StreamView> {
     final packageController = ref.watch(packageControllerNotifier);
 
     return Scaffold(
-        appBar: AppBar(title: const Text('Package List')),
-        body: Consumer(
-          builder: (context, watch, child) {
-            if (packageController.isLoading) {
-              return const CircularProgressIndicator();
-            } else if (packageController.message != null) {
-              return Text('Error: ${packageController.message}');
-            } else if (packageController.packages?.isEmpty ?? true) {
-              return const Text('No packages available');
-            } else {
-              return ListView.builder(
-                itemCount: packageController.packages!.length,
-                itemBuilder: (context, index) {
-                  final package = packageController.packages![index];
-                  return ListTile(
-                    title: Text('Package ID: ${package.id}'),
-                    subtitle: Text(
-                        'Purchased: ${package.purchased ?? "Not purchased"}'),
-                  );
-                },
-              );
-            }
-          },
-        ));
+      appBar: AppBar(title: const Text('Package List')),
+      body: packageController.isLoading
+          ? const CircularProgressIndicator()
+          : ListView.builder(
+              itemCount: packageController.packages?.length,
+              itemBuilder: (context, index) {
+                final package = packageController.packages![index];
+                return ListTile(
+                  title: Text('Package ID: ${package.id}'),
+                  subtitle: Text(
+                    'Purchased: ${package.purchased?.toString() ?? "Not purchased"}',
+                  ),
+                  onTap: () async {
+                    log("package.id.toString(): ${package.id.toString()}");
+                    ref
+                        .read(channelControllerNotifier)
+                        .fetchChannelsByPackageId(
+                          package.id.toString(),
+                        );
+                  },
+                );
+              },
+            ),
+    );
   }
 }
