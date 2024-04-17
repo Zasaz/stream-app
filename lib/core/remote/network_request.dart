@@ -150,17 +150,54 @@ class NetworkRequest {
   //----------------------------------------------------------------
   //----------------------------------------------------------------
 
-  Future<dynamic> getChannels(String packageId) async {
-    try {
-      // String token =
-      //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMzNTQ4MzUsImlhdCI6MTcxMzM1MzAzNSwiaXNzIjoidW5pcUNhc3QiLCJzdWIiOiJhY2Nlc3MiLCJkaWQiOjE4MDg5LCJkdWlkIjoiZmx1dHRlcl90ZXN0X2RldmljZV8ke3VtYWlyfV8ke2FobWVkfSIsIm9pZCI6MTI4LCJvdWlkIjoiamVya29fbWFqY2VuIiwicmlkIjoxMjgsInJvbGUiOlsic3Vic2NyaWJlciJdLCJydWlkIjoiZGVmYXVsdCIsInVpZCI6NjMxMiwidmVyc2lvbiI6Mn0.npH8fzPKPRqH7sLtO9YQQMnG39f8l7O0myYLXJs75nI";
+  // Future<dynamic> getChannels(String packageId) async {
+  //   try {
+  //     // String token =
+  //     //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMzNzQxMzksImlhdCI6MTcxMzM3MjMzOSwiaXNzIjoidW5pcUNhc3QiLCJzdWIiOiJhY2Nlc3MiLCJkaWQiOjE4MDg5LCJkdWlkIjoiZmx1dHRlcl90ZXN0X2RldmljZV8ke3VtYWlyfV8ke2FobWVkfSIsIm9pZCI6MTI4LCJvdWlkIjoiamVya29fbWFqY2VuIiwicmlkIjoxMjgsInJvbGUiOlsic3Vic2NyaWJlciJdLCJydWlkIjoiZGVmYXVsdCIsInVpZCI6NjMxMiwidmVyc2lvbiI6Mn0.q2Ccf6f7aFBnqb9r2kCbNqpr7s4jcK7olQlBz8-nHUQ";
 
+  //     String token = await LocalStorage().getStringFromSp(AppConstants.token);
+  //     String oid =
+  //         await LocalStorage().getStringFromSp(AppConstants.operator_uid);
+  //     if (kDebugMode) {
+  //       log("Token: $token");
+  //     }
+  //     final response = await http.get(
+  //       Uri.parse(
+  //           "https://office-new-dev.uniqcast.com:12611/api/client/v2/$oid/channels?packages=$packageId"),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
+  //     debugPrint("Response Status: ${response.statusCode}");
+  //     debugPrint("Response Body: ${response.body}");
+
+  //     // Checking the status code directly inside the function
+  //     if (response.statusCode == 200) {
+  //       return jsonDecode(
+  //           response.body); // Parse the JSON only if the status code is OK
+  //     } else if (response.statusCode == 401) {
+  //       // Handle unauthorized access
+  //       debugPrint('Unauthorized: Token may be expired or invalid');
+  //       throw Exception("Unauthorized: Token may be expired or invalid");
+  //     } else {
+  //       // Handle other errors
+  //       debugPrint('Error fetching channels: ${response.statusCode}');
+  //       throw Exception(
+  //           "Error fetching channels: Status code ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Error sending request: ${e.toString()}');
+  //     throw Exception(
+  //         'Failed to fetch channels due to network error: ${e.toString()}');
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> getChannels(String packageId) async {
+    try {
       String token = await LocalStorage().getStringFromSp(AppConstants.token);
       String oid =
           await LocalStorage().getStringFromSp(AppConstants.operator_uid);
-      if (kDebugMode) {
-        log("Token: $token");
-      }
       final response = await http.get(
         Uri.parse(
             "https://office-new-dev.uniqcast.com:12611/api/client/v2/$oid/channels?packages=$packageId"),
@@ -172,22 +209,16 @@ class NetworkRequest {
       debugPrint("Response Status: ${response.statusCode}");
       debugPrint("Response Body: ${response.body}");
 
-      // Checking the status code directly inside the function
       if (response.statusCode == 200) {
-        return jsonDecode(
-            response.body); // Parse the JSON only if the status code is OK
-      } else if (response.statusCode == 401) {
-        // Handle unauthorized access
-        debugPrint('Unauthorized: Token may be expired or invalid');
-        throw Exception("Unauthorized: Token may be expired or invalid");
+        return jsonDecode(response
+            .body); // This now correctly reflects the expected return type
       } else {
-        // Handle other errors
-        debugPrint('Error fetching channels: ${response.statusCode}');
+        log('Error fetching channels: ${response.statusCode}');
         throw Exception(
             "Error fetching channels: Status code ${response.statusCode}");
       }
     } catch (e) {
-      debugPrint('Error sending request: ${e.toString()}');
+      log('Error sending request: ${e.toString()}');
       throw Exception(
           'Failed to fetch channels due to network error: ${e.toString()}');
     }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tv_channels_app/core/local/local_storage.dart';
 import 'package:tv_channels_app/presenter/auth/name_view.dart';
-import 'package:tv_channels_app/presenter/home/stream_view.dart';
+import 'package:tv_channels_app/presenter/home/package_view.dart';
 import 'package:tv_channels_app/utils/constants/app_constants.dart';
 import 'package:tv_channels_app/utils/utils.dart';
 

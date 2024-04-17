@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tv_channels_app/core/failure/failure.dart';
@@ -90,7 +92,7 @@ class ChannelController extends ChangeNotifier {
   bool isLoading = false;
   String message = "";
   String? statusCode;
-  List<ChannelModel>? _channels;
+  List<ChannelModel>? _channels = [];
   ChannelModel? selectedChannel;
   bool viewingChannels = false; // To control UI state
 
@@ -100,12 +102,14 @@ class ChannelController extends ChangeNotifier {
   List<ChannelModel>? get channels => _channels;
 
   Future<void> fetchChannelsByPackageId(String packageId) async {
+    log("channelstttt: $channels");
+    log("channels: $_channels");
     isLoading = true;
     notifyListeners();
     try {
       _channels = await _channelRepository.fetchChannelsByPackageId(packageId);
-      if (_channels != null) {
-        viewingChannels = true; // Update state to show channels
+      print("Fetched channels: ${_channels!.length}");
+      if (_channels!.isNotEmpty) {
         message = "Channels fetched successfully.";
         statusCode = "200";
       } else {
@@ -113,21 +117,11 @@ class ChannelController extends ChangeNotifier {
         statusCode = "400";
       }
     } catch (e) {
-      message = "An error occurred: ${e.toString()}";
+      message = "An error occurred: $e";
       statusCode = "500";
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
-  }
-
-  void selectChannel(ChannelModel channel) {
-    selectedChannel = channel;
-    notifyListeners();
-  }
-
-  void goBackToPackages() {
-    viewingChannels = false;
-    selectedChannel = null;
-    notifyListeners();
   }
 }

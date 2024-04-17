@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/remote/controllers/auth_controller.dart';
-import '../home/stream_view.dart';
+import '../home/package_view.dart';
 import '../../utils/theme/app_colors.dart';
 import '../../utils/utils.dart';
 
@@ -178,7 +178,7 @@ class _MainViewState extends ConsumerState<LoginScreen> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const StreamView()),
+                                              const PackageView()),
                                     );
                                     showToast(AppColors.blueShade50,
                                         authProvider.message);
