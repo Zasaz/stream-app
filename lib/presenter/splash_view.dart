@@ -18,15 +18,10 @@ class SplashView extends ConsumerStatefulWidget {
 
 class _SplashViewState extends ConsumerState<SplashView> {
   void navigateAfter3Seconds() async {
-    // Ensuring LocalStorage is ready if needed
     await LocalStorage.init(); // Assuming an init method if needed
-
-    // Await a delay first, then proceed to check the token
     await Future.delayed(const Duration(seconds: 1));
 
-    // String token = await LocalStorage().getStringFromSp(AppConstants.token);
-    String token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMzNTI1NDIsImlhdCI6MTcxMzM1MDc0MiwiaXNzIjoidW5pcUNhc3QiLCJzdWIiOiJhY2Nlc3MiLCJkaWQiOjE4MDg5LCJkdWlkIjoiZmx1dHRlcl90ZXN0X2RldmljZV8ke3VtYWlyfV8ke2FobWVkfSIsIm9pZCI6MTI4LCJvdWlkIjoiamVya29fbWFqY2VuIiwicmlkIjoxMjgsInJvbGUiOlsic3Vic2NyaWJlciJdLCJydWlkIjoiZGVmYXVsdCIsInVpZCI6NjMxMiwidmVyc2lvbiI6Mn0.pjXfFOf0spZL8MsB-CT4jP31JeMWkGcfRugNbVMB3mc";
+    String token = await LocalStorage().getStringFromSp(AppConstants.token);
     String oid =
         await LocalStorage().getStringFromSp(AppConstants.operator_uid);
     String uid = await LocalStorage().getStringFromSp(AppConstants.userId);
@@ -43,8 +38,8 @@ class _SplashViewState extends ConsumerState<SplashView> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const NameView()));
     } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const NameView()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const PackageView()));
     }
   }
 
