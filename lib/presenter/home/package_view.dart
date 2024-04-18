@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tv_channels_app/core/model/channel_model.dart';
-import 'package:tv_channels_app/core/remote/controllers/channel_controller.dart';
-import 'package:tv_channels_app/core/remote/controllers/package_controller.dart';
-import 'package:tv_channels_app/presenter/home/channels_view.dart';
+import 'package:tv_channels_app/core/local/local_storage.dart';
+import 'package:tv_channels_app/presenter/auth/name_view.dart';
+import 'package:tv_channels_app/utils/constants/app_constants.dart';
+import '../../core/remote/controllers/package_controller.dart';
+import 'channels_view.dart';
 
 class PackageView extends ConsumerStatefulWidget {
   const PackageView({super.key});
@@ -17,9 +16,9 @@ class PackageView extends ConsumerStatefulWidget {
 class _MainViewState extends ConsumerState<PackageView> {
   @override
   Widget build(BuildContext context) {
-    // Watch the channel controller for changes
-    final channelController = ref.watch(channelControllerNotifier);
-    final channels = channelController.channels;
+    // Watch the controller for changes
+    // final channelController = ref.watch(channelControllerNotifier);
+    // final channels = channelController.channels;
     final packageController = ref.watch(packageControllerNotifier);
 
     return WillPopScope(
@@ -30,6 +29,21 @@ class _MainViewState extends ConsumerState<PackageView> {
             'Packages',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
+          actions: [
+            IconButton(
+              iconSize: 24,
+              color: Colors.red,
+              onPressed: () async {
+                await LocalStorage().clearSharedPref(AppConstants.token);
+                if (!mounted) return;
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NameView()),
+                );
+              },
+              icon: const Icon(Icons.logout),
+            ),
+          ],
           automaticallyImplyLeading: false,
         ),
         body: packageController.isLoading

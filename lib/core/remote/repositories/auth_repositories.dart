@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:flutter/material.dart';
 
 import '../../model/login_model.dart';
 import '../network_request.dart';
@@ -23,7 +23,7 @@ class AuthRepository extends BaseAuth {
       return LoginModel.fromJson(
           response); // Assuming this will be handled if `_checkStatusCode` does not throw
     } catch (e) {
-      log("Error during login: ${e.toString()}");
+      debugPrint("Error during login: ${e.toString()}");
       rethrow; // Ensure errors are propagated up to be handled by UI logic
     }
   }

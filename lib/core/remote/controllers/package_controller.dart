@@ -1,62 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tv_channels_app/core/failure/failure.dart';
-import 'package:tv_channels_app/core/model/channel_model.dart';
-import 'package:tv_channels_app/core/model/package_model.dart';
-import 'package:tv_channels_app/core/remote/repositories/channel_repository.dart';
-import 'package:tv_channels_app/core/remote/repositories/package_repository.dart';
-import 'package:tv_channels_app/utils/utils.dart';
+import '../../model/package_model.dart';
+import '../repositories/package_repository.dart';
+import '../../../utils/utils.dart';
 
 final packageControllerNotifier = ChangeNotifierProvider<PackageController>(
   (ref) => PackageController(
     packageRepository: PackageRepository(),
   ),
 );
-
-// class PackageController extends ChangeNotifier {
-//   final PackageRepository _packageRepository;
-//   bool isLoading = false;
-//   String message = "";
-//   String? statusCode;
-//   List<PackageModel>? _packages; //  handle a list of packageModel instances
-
-//   PackageController({required PackageRepository packageRepository})
-//       : _packageRepository = packageRepository;
-
-//   Future<void> fetchPackages() async {
-//     isLoading = true;
-//     message = ""; // Clear previous messages
-//     notifyListeners();
-
-//     try {
-//       _packages =
-//           await _packageRepository.fetchPackages(); // Updated to handle list
-//       debugPrint("Packages loaded: ${_packages?.length}");
-
-//       if (_packages != null && _packages!.isNotEmpty) {
-//         message = "Packages fetched successfully.";
-//         statusCode = "200";
-//       } else {
-//         message = "No Packages available";
-//         statusCode = "400";
-//       }
-//     } on SignInFailure catch (e) {
-//       message = e.message;
-//       statusCode = "401";
-//     } catch (e) {
-//       message = "An error occurred: ${e.toString()}";
-//       statusCode = "500";
-//     }
-
-//     isLoading = false;
-//     notifyListeners();
-//   }
-
-//   // Getter to access channels outside of this class
-//   List<PackageModel>? get packages => _packages;
-// }
 
 class PackageController extends ChangeNotifier {
   final PackageRepository _packageRepository;
@@ -78,8 +30,8 @@ class PackageController extends ChangeNotifier {
       _packages = await _packageRepository.fetchPackages();
       if (_packages != null && _packages!.isNotEmpty) {
         message = "Packages fetched successfully.";
-        log("Packages fetched successfully: ${_packages?.length}");
-        log("PrettyJson Package: ${prettyJson(_packages)}");
+        debugPrint("Packages fetched successfully: ${_packages?.length}");
+        debugPrint("PrettyJson Package: ${prettyJson(_packages)}");
         statusCode = "200";
       } else {
         message = "No Packages available";
@@ -96,31 +48,3 @@ class PackageController extends ChangeNotifier {
 
   List<PackageModel>? get packages => _packages;
 }
-
-
-// class PackageController extends ChangeNotifier {
-//   final PackageRepository _packageRepository;
-//   bool isLoading = false;
-//   List<PackageModel>? packages;
-//   String? errorMessage;
-
-//   // PackageController(this._packageRepository);
-//   PackageController({required PackageRepository packageRepository})
-//       : _packageRepository = packageRepository;
-
-//   Future<void> loadPackages() async {
-//     isLoading = true;
-//     notifyListeners();
-
-//     try {
-//       packages = await _packageRepository.fetchPackages();
-//       errorMessage = null;
-//     } catch (e) {
-//       errorMessage = e.toString();
-//       packages = [];
-//     }
-
-//     isLoading = false;
-//     notifyListeners();
-//   }
-// }

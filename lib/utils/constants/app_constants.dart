@@ -5,4 +5,5 @@ abstract class AppConstants {
   static String userId = "userId";
   static String deviceId = "deviceId";
   static String operator_uid = "operator_uid";
+  static String tokenExpiry = "tokenExpiry";
 }

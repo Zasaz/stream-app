@@ -72,22 +72,26 @@ class _MainViewState extends ConsumerState<LoginScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "Welcome ${widget.firstName}",
-                    style: const TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                  child: Center(
+                    child: Text(
+                      "Welcome ${widget.firstName}",
+                      style: const TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
                   ),
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "Login to your account",
-                    style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                  child: Center(
+                    child: Text(
+                      "Login to your account",
+                      style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
                   ),
                 ),
                 Padding(
@@ -107,9 +111,11 @@ class _MainViewState extends ConsumerState<LoginScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
+                              style: const TextStyle(color: Colors.black),
                               controller: usernameController,
                               decoration: const InputDecoration(
                                 labelText: "Username",
+                                labelStyle: TextStyle(color: Colors.black),
                                 prefixIcon: Icon(
                                   Icons.person,
                                   size: 18,
@@ -128,10 +134,13 @@ class _MainViewState extends ConsumerState<LoginScreen> {
                             ),
                             const SizedBox(height: 16),
                             TextFormField(
+                              style: const TextStyle(color: Colors.black),
                               controller: passwordController,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: "Password",
+                                labelStyle:
+                                    const TextStyle(color: Colors.black),
                                 prefixIcon: const Icon(
                                   Icons.lock,
                                   size: 18,
@@ -139,11 +148,17 @@ class _MainViewState extends ConsumerState<LoginScreen> {
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () => _toggle(),
-                                  icon: const Icon(
-                                    Icons.remove_red_eye,
-                                    size: 18,
-                                    color: Colors.black,
-                                  ),
+                                  icon: !_obscureText
+                                      ? const Icon(
+                                          Icons.visibility,
+                                          size: 18,
+                                          color: Colors.black,
+                                        )
+                                      : const Icon(
+                                          Icons.visibility_off,
+                                          size: 18,
+                                          color: Colors.black,
+                                        ),
                                 ),
                               ),
                               keyboardType: TextInputType.text,
@@ -180,7 +195,7 @@ class _MainViewState extends ConsumerState<LoginScreen> {
                                           builder: (context) =>
                                               const PackageView()),
                                     );
-                                    showToast(AppColors.blueShade50,
+                                    showToast(AppColors.newGreen,
                                         authProvider.message);
                                   } else {
                                     showToast(

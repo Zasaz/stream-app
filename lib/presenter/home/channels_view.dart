@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tv_channels_app/core/remote/controllers/channel_controller.dart';
-import 'package:tv_channels_app/utils/utils.dart';
+import 'package:tv_channels_app/presenter/home/widgets/logo_widget.dart';
+import '../../core/remote/controllers/channel_controller.dart';
+import '../../utils/utils.dart';
 
 class ChannelsView extends ConsumerStatefulWidget {
   final String packageId;
@@ -65,64 +66,13 @@ class _ChannelsViewState extends ConsumerState<ChannelsView> {
 
   @override
   void dispose() {
-    _betterPlayerController
-        ?.dispose(); // Ensure the controller is disposed on widget dispose
+    _betterPlayerController?.dispose(); // Ensure the controller is disposed
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final channelController = ref.watch(channelControllerNotifier);
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text('Channels'),
-    //   ),
-    //   body: channelController.isLoading
-    //       ? const Center(child: CircularProgressIndicator())
-    //       : channelController.channels!.isEmpty
-    //           ? const Center(child: Text("No channels available"))
-    //           : Column(
-    //               children: [
-    //                 if (showVideoPlayer && selectedChannelUrl != null)
-    //                   Expanded(
-    //                     flex: 1, // size ratio for video player
-    //                     child: BetterPlayer.network(
-    //                       selectedChannelUrl!,
-    //                       betterPlayerConfiguration:
-    //                           const BetterPlayerConfiguration(
-    //                         aspectRatio: 16 / 9,
-    //                         autoPlay: true,
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 Expanded(
-    //                   flex: 2,
-    //                   child: ListView.builder(
-    //                     physics: const AlwaysScrollableScrollPhysics(
-    //                       parent: BouncingScrollPhysics(),
-    //                     ),
-    //                     padding: const EdgeInsets.only(right: 5, left: 5),
-    //                     itemCount: channelController.channels?.length,
-    //                     itemBuilder: (context, index) {
-    //                       final channel = channelController.channels?[index];
-    //                       return Card(
-    //                         elevation: 1.5,
-    //                         shape: const RoundedRectangleBorder(
-    //                           borderRadius:
-    //                               BorderRadius.all(Radius.circular(8)),
-    //                         ),
-    //                         child: ListTile(
-    //                           title: Text(channel!.name),
-    //                           onTap: playChannel, // No need to pass URL anymore
-    //                         ),
-    //                       );
-    //                     },
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    // );
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Channels'),
@@ -141,27 +91,58 @@ class _ChannelsViewState extends ConsumerState<ChannelsView> {
                       ),
                     Expanded(
                       flex: 2,
-                      child: ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(
-                          parent: BouncingScrollPhysics(),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Two items per row
+                          childAspectRatio: (MediaQuery.of(context).size.width /
+                                  2) /
+                              150, // Ratio based on screen width and desired height
+                          crossAxisSpacing: 2, // Horizontal space between items
+                          mainAxisSpacing: 2, // Vertical space between items
                         ),
-                        padding: const EdgeInsets.only(right: 5, left: 5),
                         itemCount: channelController.channels?.length,
                         itemBuilder: (context, index) {
                           final channel = channelController.channels?[index];
-                          return Card(
-                            elevation: 1.5,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
-                            ),
-                            child: ListTile(
-                              title: Text(channel!.name),
-                              onTap: () => playChannel(
-                                  streamUrl), // Use the class-level base64 URL for decoding and playing
+                          return GestureDetector(
+                            onTap: () => playChannel(
+                                streamUrl), // Use the class-level base64 URL for decoding and playing
+                            child: Card(
+                              elevation: 1.5,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: ChannelLogoWidget(
+                                      channelId: channel!.id,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    color: Colors.black.withOpacity(
+                                        0.5), // Semi-transparent overlay for better text visibility
+                                    width: double.infinity,
+                                    child: Center(
+                                      child: Text(
+                                        channel.name,
+                                        style: const TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        padding: const EdgeInsets.all(5),
                       ),
                     ),
                   ],

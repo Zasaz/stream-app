@@ -17,6 +17,8 @@ showToast(Color color, String msg) {
 String streamUrl =
     "aHR0cHM6Ly9kZW1vLnVuaWZpZWQtc3RyZWFtaW5nLmNvbS9rOHMvZmVhdHVyZXMvc3RhYmxlL3ZpZGVvL3RlYXJzLW9mLXN0ZWVsL3RlYXJzLW9mLXN0ZWVsLmlzbS8ubTN1OA==";
 
+int getCurrentTimestamp() => DateTime.now().millisecondsSinceEpoch;
+
 // Utility function to decode base64
 String decodeBase64(String base64String) {
   return utf8.decode(base64.decode(base64String));

@@ -7,7 +7,6 @@ import 'package:tv_channels_app/core/local/local_storage.dart';
 import 'package:tv_channels_app/presenter/auth/name_view.dart';
 import 'package:tv_channels_app/presenter/home/package_view.dart';
 import 'package:tv_channels_app/utils/constants/app_constants.dart';
-import 'package:tv_channels_app/utils/utils.dart';
 
 class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
@@ -43,14 +42,51 @@ class _SplashViewState extends ConsumerState<SplashView> {
     }
   }
 
+  //   void navigateAfter3Seconds() async {
+  //   await LocalStorage.init();
+  //   await Future.delayed(const Duration(seconds: 1));
+
+  //   String token = await LocalStorage().getStringFromSp(AppConstants.token);
+  //   String expiryTimeString =
+  //       await LocalStorage().getStringFromSp(AppConstants.tokenExpiry);
+
+  //   debugPrint("Token from SharedPreferences: $token");
+  //   debugPrint("Expiry time string from SharedPreferences: $expiryTimeString");
+
+  //   // Convert expiry time from String to int
+  //   int? expiryTime = int.tryParse(expiryTimeString);
+
+  //   debugPrint("Expiry time in milliseconds since epoch: $expiryTime");
+  //   debugPrint(
+  //       "Current time in milliseconds since epoch: ${getCurrentTimestamp()}");
+
+  //   // Check if token is expired
+  //   if (expiryTime == null || getCurrentTimestamp() > expiryTime) {
+  //     debugPrint("Token is considered expired or expiry time is null.");
+  //     if (mounted) {
+  //       Navigator.pushReplacement(
+  //           context, MaterialPageRoute(builder: (context) => const NameView()));
+  //     }
+  //     return;
+  //   }
+
+  //   if (!mounted) return;
+
+  //   if (token.isEmpty) {
+  //     debugPrint("Token is empty.");
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (context) => const NameView()));
+  //   } else {
+  //     debugPrint("Token is valid and not expired. Navigating to PackageView.");
+  //     Navigator.pushReplacement(context,
+  //         MaterialPageRoute(builder: (context) => const PackageView()));
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
     navigateAfter3Seconds();
-    // String encodedUrl =
-    //     "aHR0cHM6Ly9kZW1vLnVuaWZpZWQtc3RyZWFtaW5nLmNvbS9rOHMvZmVhdHVyZXMvc3RhYmxlL3ZpZGVvL3RlYXJzLW9mLXN0ZWVsL3RlYXJzLW9mLXN0ZWVsLmlzbS8ubTN1OA==";
-    // String decodedUrl = decodeStreamUrl(encodedUrl);
-    // log("Decoded URL: $decodedUrl");
   }
 
   @override

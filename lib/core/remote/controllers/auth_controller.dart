@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tv_channels_app/core/local/local_storage.dart';
-import 'package:tv_channels_app/utils/constants/app_constants.dart';
+import '../../local/local_storage.dart';
+import '../../../utils/constants/app_constants.dart';
 import '../../failure/failure.dart';
 import '../repositories/auth_repositories.dart';
 
@@ -34,15 +32,24 @@ class AuthController extends ChangeNotifier {
     try {
       _loginModel =
           await _authRepository.login(username, password, firstName, lastName);
-      log("_loginModel: $_loginModel");
+      debugPrint("_loginModel: $_loginModel");
       if (_loginModel != null) {
         message = "Login successful";
+
+        int expiresInMs = int.tryParse(_loginModel!.data!.expiresIn ?? "0") ??
+            0; // Assuming expiresIn is in seconds
+        int expiryTimestamp =
+            DateTime.now().millisecondsSinceEpoch + expiresInMs * 1000;
+
         await LocalStorage().addStringToSP(
-            AppConstants.token, _loginModel!.data!.accessToken.toString());
-        await LocalStorage().addStringToSP(AppConstants.operator_uid,
-            _loginModel!.data!.operatorUid.toString());
+            AppConstants.token, _loginModel!.data!.accessToken ?? "");
+        await LocalStorage().addStringToSP(
+            AppConstants.operator_uid, _loginModel!.data!.operatorUid ?? "");
         await LocalStorage().addStringToSP(
             AppConstants.userId, _loginModel!.data!.userId.toString());
+        await LocalStorage().addStringToSP(AppConstants.tokenExpiry,
+            expiryTimestamp.toString()); // Store expiry as timestamp
+
         statusCode = "200";
       } else {
         message = "Login failed, no user data received";
